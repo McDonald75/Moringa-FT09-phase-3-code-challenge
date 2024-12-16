@@ -1,15 +1,24 @@
 from database.connection import cursor, conn
+from article import Article 
+from magazine import Magazine
 
 class Author:
     def __init__(self,id, name):
         self._id = id
         self._name = name
-
-
+    def _save(self):
+        cursor.execute("""
+INSERT INTO authors (id, name) VALUES (?,?)
+""", (self._id, self._name))
+        self._id = cursor.lastrowid()
     @property
     def id(self):
         return self._id
-
+    @id.setter
+    def id(self, id):
+        if not isinstance(id, int):
+            raise Exception('Invalid id')
+        self._id = id
     @property
     def name(self):
         return self._name
