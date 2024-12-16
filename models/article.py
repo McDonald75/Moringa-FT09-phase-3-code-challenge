@@ -27,6 +27,14 @@ class Article:
         if hasattr(self, 'title') or (not isinstance(value, str) and not 5 <= len(value) <= 50):
             raise Exception('Invalid title')
         self._title = value
+    def author(self):
+        cursor.execute("SELECT authors.* FROM articles JOIN authors ON articles.author_id = authors.id  WHERE articles.author_id == ?  LIMIT 1 ", (self.author_id))
+        author = cursor.fetchone()
+        return author
+    def magazine(self):
+        cursor.execute("SELECT authors.* FROM articles JOIN authors ON articles.author_id = authors.id  WHERE articles.author_id == ?  LIMIT 1 ", (self.author_id))
+        author = cursor.fetchone()
+        return author
         
     def __repr__(self):
         return f'<Article {self.title}>'
