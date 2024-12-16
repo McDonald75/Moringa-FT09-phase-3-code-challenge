@@ -1,15 +1,19 @@
 from database.connection import cursor, conn
-from article import Article 
-from magazine import Magazine
 
 class Author:
     def __init__(self,id, name):
-        self._id = id
-        self._name = name
-    def _save(self):
-        cursor.execute("""
-INSERT INTO authors (id, name) VALUES (?,?)
-""", (self._id, self._name))
+        self.name = name
+        self.id = id
+    @property
+    def id(self):
+        return self._id
+    @id.setter
+    def id(self, id):
+        if not isinstance(id, int):
+            raise Exception("Invalid Id")
+        cursor.execute('''
+                       INSERT INTO authors (id,name) VALUES (?,?)
+                       ''', (self._id, self._name))
         self._id = cursor.lastrowid()
     @property
     def id(self):
@@ -29,9 +33,9 @@ INSERT INTO authors (id, name) VALUES (?,?)
             if isinstance(value, str) and len(value) > 0:
                 self._name = value
             else:
-                raise ValueError("Name must be a non-empty string")
+                raise Exception("Name must be a non-empty string")
         else:
-            raise AttributeError("Cannot change name after initialization")
+            raise Exception("Cannot change name after initialization")
 
     def articles(self):
         cursor.execute("""
@@ -41,7 +45,7 @@ INSERT INTO authors (id, name) VALUES (?,?)
             WHERE articles.author_id = ?
         """, (self.id,))
         articles = cursor.fetchall()
-        return [Article(self, Magazine(row[3], row[4], row[2]), row[1], row[0]) for row in articles]
+        pass
 
     def magazines(self):
         cursor.execute("""
@@ -51,6 +55,6 @@ INSERT INTO authors (id, name) VALUES (?,?)
             WHERE articles.author_id = ?
         """, (self.id,))
         magazines = cursor.fetchall()
-        return [Magazine(row[1], row[2], row[0]) for row in magazines]
+        pass
     def __repr__(self):
         return f'<Author {self.name}>'

@@ -1,27 +1,31 @@
-from .author import Author
-from .article import Article
-
+from database.connection import cursor
 class Magazine:
     def __init__(self,id, name, category='default'):
-        self._id = id
         self.name = name
         self.category = category
+        self.id = id
         
     @property
     def id(self):
         return self._id
-
+    
+    @id.setter
+    def id(self, id):
+        if not isinstance(id, int):
+            raise Exception("Invalid Id")
+        cursor.execute('''
+                       INSERT INTO magazines (name, category) VALUES (?, ?)
+                       ''', (self._name, self._category))
+        self._id = cursor.lastrowid
     @property
     def name(self):
         return self._name
 
     @name.setter
     def name(self, value):
-        if isinstance(value, str) and 2 <= len(value) <= 16:
-            self._name = value
-            
-        else:
-            raise ValueError("Name must be a string between 2 and 16 characters")
+        if not isinstance(value, str) and 2 <= len(value) <= 16:
+            raise Exception("Invalid name")
+        self._name = value
 
     @property
     def category(self):
@@ -29,19 +33,17 @@ class Magazine:
 
     @category.setter
     def category(self, value):
-        if isinstance(value, str) and len(value) > 0:
-            self._category = value
-            
-        else:
-            raise ValueError("Category must be a non-empty string")
+        if not (isinstance(value, str) and len(value) > 0):
+            raise Exception("invalid category")
+        self._category = value
 
     def articles(self):
        
-        return [Article(Author(row[3], row[2]), self, row[1], row[0]) for row in articles]
+        pass
 
     def contributors(self):
         
-        return [Author(row[1], row[0]) for row in Author.all]
+        pass
 
     def article_titles(self):
         articles = self.articles()
