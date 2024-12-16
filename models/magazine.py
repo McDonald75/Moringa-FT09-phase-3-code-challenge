@@ -42,15 +42,16 @@ class Magazine:
         pass
 
     def contributors(self):
-        
-        pass
+        cursor.execute(''''
+                       SELECT DISTINCT authors.* FROM articles JOIN authors ON articles.author_id = authors.id WHERE articles.magazine_id = ?''', (self.id))
+        authors = cursor.fetchall()
+        return authors
 
     def article_titles(self):
         articles = self.articles()
         return [article.title for article in articles] if articles else None
 
     def contributing_authors(self):
-        
-        return [magazine.author for magazine in Magazine.all]
+        pass
     def __repr__(self):
         return f'<Magazine {self.name}>'

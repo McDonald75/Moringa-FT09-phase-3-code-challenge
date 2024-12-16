@@ -28,13 +28,13 @@ class Article:
             raise Exception('Invalid title')
         self._title = value
     def author(self):
-        cursor.execute("SELECT authors.* FROM articles JOIN authors ON articles.author_id = authors.id  WHERE articles.author_id == ?  LIMIT 1 ", (self.author_id))
+        cursor.execute("SELECT authors.* FROM articles JOIN authors ON articles.author_id = authors.id  WHERE articles.author_id = ?  LIMIT 1 ", (self.author_id))
         author = cursor.fetchone()
         return author
     def magazine(self):
-        cursor.execute("SELECT authors.* FROM articles JOIN authors ON articles.author_id = authors.id  WHERE articles.author_id == ?  LIMIT 1 ", (self.author_id))
-        author = cursor.fetchone()
-        return author
+        cursor.execute("SELECT magazines.* FROM articles JOIN magazines ON articles.magazine_id = magazines.id  WHERE articles.magazine_id = ?  LIMIT 1 ", (self.magazine_id))
+        magazine = cursor.fetchone()
+        return magazine
         
     def __repr__(self):
         return f'<Article {self.title}>'

@@ -45,7 +45,7 @@ class Author:
             WHERE articles.author_id = ?
         """, (self.id,))
         articles = cursor.fetchall()
-        pass
+        return articles
 
     def magazines(self):
         cursor.execute("""
@@ -55,6 +55,6 @@ class Author:
             WHERE articles.author_id = ?
         """, (self.id,))
         magazines = cursor.fetchall()
-        pass
+        return magazines
     def __repr__(self):
         return f'<Author {self.name}>'
