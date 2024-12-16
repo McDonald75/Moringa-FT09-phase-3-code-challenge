@@ -38,8 +38,10 @@ class Magazine:
         self._category = value
 
     def articles(self):
-       
-        pass
+        cursor.execute('''
+                       SELECT * FROM articles WHERE articles.magazine_id = ? ''', (self.id))
+        articles = cursor.fetchall()
+        return articles
 
     def contributors(self):
         cursor.execute(''''
@@ -52,6 +54,13 @@ class Magazine:
         return [article.title for article in articles] if articles else None
 
     def contributing_authors(self):
-        pass
+        cursor.execute('''
+                       SELECT authors.*, COUNT(articles.id) AS article_count FROM articles JOIN authors ON articles.author_id = authors.id WHERE articles.magazine_id = ? GROUP BY authors.id, authors.name HAVING COUNT(articles.id) > 2''', (self.id))
+        authors = cursor.fetchall()
+        
+        if authors:
+            return authors
+        else:
+            return None
     def __repr__(self):
         return f'<Magazine {self.name}>'
